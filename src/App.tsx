@@ -41,6 +41,7 @@ function App() {
     chrome.tabs.query({}, (tabs) => {
       const fuse = new Fuse(tabs, {
         keys: ["title", "url"],
+        threshold: 0.3, // 1 means anything matches, and 0 means nothing matches
       });
       const foundTabs = fuse.search(input).map((result) => result.item);
       setTabs(foundTabs);

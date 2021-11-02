@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "icons": {
-    "512": "logo512.png"
+    "512": "logo.png"
   },
   "browser_action": {
-    "default_icon": "logo512.png",
+    "default_icon": "logo.png",
     "default_popup": "popup.html"
   },
   "commands": {
