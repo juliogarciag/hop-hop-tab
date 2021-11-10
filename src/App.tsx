@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Fuse from "fuse.js";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 function nextItemInCycle<Item>(items: Array<Item>, item: Item) {
   const index = items.indexOf(item);
@@ -38,6 +38,9 @@ function App() {
   );
 
   const searchTab = useCallback((input: string) => {
+    if (!chrome || !chrome.tabs) {
+      return;
+    }
     chrome.tabs.query({}, (tabs) => {
       const fuse = new Fuse(tabs, {
         keys: ["title", "url"],
@@ -49,8 +52,28 @@ function App() {
     });
   }, []);
 
+  const logoRef = useRef<HTMLImageElement | null>(null);
+  const timerRef = useRef<number | null>(null);
+
+  const ORIGINAL_OPACITY = "0.6";
+
   const updateInput = useCallback(
     (newInput: string) => {
+      if (logoRef.current) {
+        logoRef.current.style.opacity = "1";
+      }
+
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+      }
+
+      timerRef.current = window.setTimeout(() => {
+        if (logoRef.current) {
+          logoRef.current.style.opacity = ORIGINAL_OPACITY;
+        }
+        timerRef.current = null;
+      }, 600);
+
       setInput(newInput);
       searchTab(newInput);
     },
@@ -100,13 +123,28 @@ function App() {
 
   return (
     <div className="bg-white h-full w-full p-2">
-      <input
-        type="text"
-        autoFocus
-        className="px-2 py-1 block w-full text-2xl ring-0 outline-none"
-        onChange={(event) => updateInput(event.target.value)}
-        value={input}
-      />
+      <div className="flex flex-row">
+        <input
+          type="text"
+          autoFocus
+          className="px-2 py-1 block w-full text-2xl ring-0 outline-none"
+          onChange={(event) => updateInput(event.target.value)}
+          value={input}
+        />
+        <div className="flex items-center">
+          <img
+            ref={logoRef}
+            src="/logo.png"
+            alt=""
+            style={{
+              width: "32px",
+              height: "32px",
+              opacity: ORIGINAL_OPACITY,
+            }}
+            className="transition-all"
+          />
+        </div>
+      </div>
       {tabs.length > 0 ? (
         <div className="mt-2">
           {tabs.map((tab) => {
