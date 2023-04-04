@@ -2,16 +2,16 @@
   "name": "Hop Hop Tab",
   "description": "Instantly jump between tabs",
   "version": "0.0.1",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": {
     "512": "logo.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "logo.png",
     "default_popup": "popup.html"
   },
   "commands": {
-    "_execute_browser_action": {
+    "_execute_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+P",
         "linux": "Ctrl+Shift+P",

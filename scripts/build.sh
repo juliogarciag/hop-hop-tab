@@ -7,6 +7,7 @@ build() {
 
     export INLINE_RUNTIME_CHUNK=false
     export GENERATE_SOURCEMAP=false
+    export NODE_OPTIONS=--openssl-legacy-provider
 
     yarn craco build
 
